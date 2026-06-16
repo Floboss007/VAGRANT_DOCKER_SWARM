@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # This script will be run on each Vagrant node to install Docker Engine
-sudo apt update
-sudo apt install ca-certificates curl
+sudo apt-get update
+sudo apt-get install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -17,10 +17,10 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo apt update
+sudo apt-get update
 
 # Install Docker Engine
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 sudo systemctl start docker
 sudo systemctl enable docker

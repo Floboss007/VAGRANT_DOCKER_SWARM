@@ -1,26 +1,55 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# created by: Femi Fakolujo
+# creates 3 virtual machines for docker swarm cluster
+
 Vagrant.configure("2") do |config|
-  # Define the three nodes
-  nodes = {
-    "manager1" => "192.168.56.11",
-    "worker1"  => "192.168.56.12",
-    "worker2"  => "192.168.56.13"
-  }
+ config.vm.box = "ubuntu/jammy64"
+ config.vm.box_check_update = false
+ 
 
-  nodes.each do |name, ip|
-    config.vm.define name do |node|
-      # Use the latest Ubuntu LTS available
-      node.vm.box = "ubuntu/jammy64"   # ubuntu/jammy64 for windows 
-      node.vm.network "private_network", ip: ip
-      node.vm.forwarded_port 2375, guest: 80, host: 8080, auto_correct: true # Docker API port
-      node.vm.provider "virtualbox" do |vb|
-        vb.name = name
-        vb.memory = 1024 # 1GB RAM per node is plenty for testing
-        vb.cpus = 1
-      end
-
-      # Provisioner to install Docker automatically
-      node.vm.provision "shell", path: "docker-provision.sh"
+ # ----------------------------manager1----------------------------
+  config.vm.define "manager1" do |manager|
+    
+    manager.vm.hostname = "manager1"
+    manager.vm.network "private_network", ip: "192.168.56.11"
+    manager.vm.network "forwarded_port", guest: 80, host: 8080
+    manager.vm.provider "virtualbox" do |vb|
+      vb.name = "manager1"
+      vb.memory = "1024"
+      vb.cpus = 2
     end
-  end
-end
+    manager.vm.provision "shell", path: "scripts/docker-install.sh"
+    manager.vm.provision "shell", path: "scripts/manager.sh"
+  end   
 
+  #----------------------------worker1----------------------------
+  config.vm.define "worker1" do |worker|
+    
+    worker.vm.hostname = "worker1"
+    worker.vm.network "private_network", ip: "192.168.56.12"
+    worker.vm.provider "virtualbox" do |vb|
+      vb.name = "worker1"
+      vb.memory = "1024"
+      vb.cpus = 2
+    end
+    worker.vm.provision "shell", path: "scripts/docker-install.sh"
+    worker.vm.provision "shell", path: "scripts/worker.sh"
+  end
+
+ # ----------------------------worker2----------------------------
+  config.vm.define "worker2" do |worker|
+    
+    worker.vm.hostname = "worker2"
+    worker.vm.network "private_network", ip: "192.168.56.13"
+    worker.vm.provider "virtualbox" do |vb|
+      vb.name = "worker2"
+      vb.memory = "1024"
+      vb.cpus = 2
+    end
+    worker.vm.provision "shell", path: "scripts/docker-install.sh"
+    worker.vm.provision "shell", path: "scripts/worker.sh"
+  end  
+
+end 
