@@ -9,6 +9,7 @@ The `scripts/` directory contains all the required provisioning scripts:
 *   **`scripts/docker-install.sh`**: Provisioned on all virtual machines to handle the base Docker installation.
 *   **`scripts/manager.sh`**: Specific to the `manager1` VM. It initializes the Docker Swarm cluster and generates an executable join script for the workers inside the shared `/vagrant` folder. the script will be overwritten when you run vagrant up afresh.
 *   **`scripts/worker.sh`**: Provisions the worker machines, automatically executing the generated script to join them to the swarm cluster.
+*   **`The worker_join_command.sh file will get overwritten when you run vagrant up afresh`**
 
 ---
 
